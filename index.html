@@ -1,55 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>nishhh's progress</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nishhh's Progress</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="auth-section" class="card">
-    <h2>nishhh's progress</h2>
-    <p class="quote">"Limits are Lies"</p>
-    <input type="text" id="username" placeholder="Username" />
-    <input type="password" id="password" placeholder="Password" />
-    <button onclick="register()">Register</button>
-    <button onclick="login()">Login</button>
-    <p id="auth-msg"></p>
+  <div class="login-container">
+    <img src="background.png" alt="Login Background" class="bg-img">
+    <div class="overlay"></div>
+    <div class="login-box">
+      <h1>Limits are <span class="highlight">Lies</span></h1>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p>Don't have an account? <a href="#" onclick="toggleRegister()">Register</a></p>
+    </div>
   </div>
 
-  <div id="app" style="display:none">
-    <header>
-      <h1>nishhh's Progress</h1>
-      <button onclick="logout()">Logout</button>
-      <label class="switch">
-        <input type="checkbox" id="darkToggle" onchange="toggleDarkMode()" />
-        <span class="slider"></span>
-      </label>
-    </header>
-
-    <div class="form">
-      <select id="liftType">
-        <option>Bench Press</option>
-        <option>Squat</option>
-        <option>Deadlift</option>
-        <option>Shoulder Press</option>
-      </select>
-      <input type="number" id="sets" placeholder="Sets" />
-      <input type="number" id="reps" placeholder="Reps" />
-      <input type="number" id="weight" placeholder="Weight (kg)" />
-      <input type="text" id="feel" placeholder="How did it feel?" />
-      <button onclick="saveEntry()">Save Entry</button>
-    </div>
-
-    <div class="data">
-      <h2>Saved Entries</h2>
-      <div id="entries"></div>
-    </div>
-
-    <canvas id="chart" width="400" height="200"></canvas>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
