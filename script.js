@@ -1,120 +1,114 @@
-// Dark Mode Functionality
+let currentUser = null;
+
+function register() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+  if (!user || !pass) return showMessage("Fill all fields");
+  if (localStorage.getItem(`user_${user}`)) {
+    return showMessage("User already exists");
+  }
+  localStorage.setItem(`user_${user}`, pass);
+  showMessage("Registered! Please login.");
+}
+
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+  const stored = localStorage.getItem(`user_${user}`);
+  if (stored && stored === pass) {
+    currentUser = user;
+    document.getElementById("auth-section").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    loadEntries();
+  } else {
+    showMessage("Invalid login");
+  }
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById("auth-section").style.display = "block";
+  document.getElementById("app").style.display = "none";
+}
+
+function showMessage(msg) {
+  document.getElementById("auth-msg").innerText = msg;
+}
+
+function saveEntry() {
+  const liftType = document.getElementById("liftType").value;
+  const sets = document.getElementById("sets").value;
+  const reps = document.getElementById("reps").value;
+  const weight = document.getElementById("weight").value;
+  const feel = document.getElementById("feel").value;
+
+  const entry = {
+    liftType,
+    sets: parseInt(sets),
+    reps: parseInt(reps),
+    weight: parseFloat(weight),
+    feel,
+    date: new Date().toLocaleDateString()
+  };
+
+  const key = `entries_${currentUser}`;
+  let entries = JSON.parse(localStorage.getItem(key)) || [];
+  entries.push(entry);
+  localStorage.setItem(key, JSON.stringify(entries));
+  loadEntries();
+}
+
+function loadEntries() {
+  const key = `entries_${currentUser}`;
+  const entries = JSON.parse(localStorage.getItem(key)) || [];
+  const container = document.getElementById("entries");
+  container.innerHTML = "";
+
+  let chartData = {};
+
+  entries.forEach(entry => {
+    const div = document.createElement("div");
+    div.innerText = `${entry.date} - ${entry.liftType}: ${entry.sets} sets × ${entry.reps} reps @ ${entry.weight}kg (${entry.feel})`;
+    container.appendChild(div);
+
+    if (!chartData[entry.liftType]) {
+      chartData[entry.liftType] = { dates: [], weights: [] };
+    }
+    chartData[entry.liftType].dates.push(entry.date);
+    chartData[entry.liftType].weights.push(entry.weight);
+  });
+
+  drawChart(chartData);
+}
+
+function drawChart(data) {
+  const ctx = document.getElementById("chart").getContext("2d");
+  if (window.chart) window.chart.destroy();
+
+  const datasets = Object.keys(data).map((lift, i) => ({
+    label: lift,
+    data: data[lift].weights,
+    borderColor: ["red", "green", "blue", "orange"][i],
+    tension: 0.3
+  }));
+
+  window.chart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: data[Object.keys(data)[0]]?.dates || [],
+      datasets: datasets
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "Weight (kg)" }
+        }
+      }
+    }
+  });
+}
+
 function toggleDarkMode() {
-    const body = document.body;
-    body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+  document.body.classList.toggle("dark");
 }
-
-function loadDarkMode() {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    if (darkMode) {
-        document.body.classList.add('dark-mode');
-    }
-}
-
-// Show/Hide Login and Register Forms
-function showRegister() {
-    document.getElementById('login-form').style.display = 'none';
-    document.getElementById('register-form').style.display = 'block';
-}
-
-function showLogin() {
-    document.getElementById('login-form').style.display = 'block';
-    document.getElementById('register-form').style.display = 'none';
-}
-
-// Register New User
-function registerUser() {
-    const username = document.getElementById('new-username').value;
-    const password = document.getElementById('new-password').value;
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-
-    if (users.find(user => user.username === username)) {
-        alert('User already exists!');
-        return;
-    }
-
-    users.push({ username, password });
-    localStorage.setItem('users', JSON.stringify(users));
-
-    alert('Registration successful!');
-    showLogin();
-}
-
-// Login User
-function loginUser() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-
-    const user = users.find(u => u.username === username && u.password === password);
-
-    if (!user) {
-        alert('Invalid credentials');
-        return;
-    }
-
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    window.location.href = 'home.html';
-}
-
-// Save Lift Data
-function saveLiftData() {
-    const liftType = document.getElementById('liftType').value;
-    const sets = document.getElementById('sets').value;
-    const reps = document.getElementById('reps').value;
-    const weight = document.getElementById('weight').value;
-    const feeling = document.getElementById('feeling').value;
-
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-    const userData = JSON.parse(localStorage.getItem(currentUser.username)) || {
-        bench: [],
-        squat: [],
-        deadlift: [],
-        shoulderPress: []
-    };
-
-    userData[liftType].push({ sets, reps, weight, feeling });
-
-    localStorage.setItem(currentUser.username, JSON.stringify(userData));
-    alert('Lift data saved successfully!');
-    loadLiftData();  // Reload lift data to show the latest entry
-}
-
-// Load Lift Data
-function loadLiftData() {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    const userData = JSON.parse(localStorage.getItem(currentUser.username));
-
-    if (userData) {
-        let liftHTML = '';
-        Object.keys(userData).forEach(lift => {
-            liftHTML += `<h3>${lift}</h3><ul>`;
-            userData[lift].forEach(entry => {
-                liftHTML += `<li>Sets: ${entry.sets}, Reps: ${entry.reps}, Weight: ${entry.weight}kg, Feeling: ${entry.feeling}</li>`;
-            });
-            liftHTML += `</ul>`;
-        });
-
-        document.getElementById('liftData').innerHTML = liftHTML;
-    }
-}
-
-// Logout User
-function logoutUser() {
-    localStorage.removeItem('currentUser');
-    window.location.href = 'login.html';
-}
-
-// On page load, check if user is logged in
-if (window.location.href.includes('home.html')) {
-    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (!currentUser) {
-        window.location.href = 'login.html';
-    } else {
-        document.getElementById('user-name').textContent = currentUser.username;
-        loadLiftData();
-    }
-}
-
