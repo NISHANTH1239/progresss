@@ -6,49 +6,55 @@
     <title>Nishhh's Progress</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body onload="loadDarkMode()">
     <div class="container">
-        <header>
-            <h1>Nishhh's Progress</h1>
-            <button class="dark-mode-toggle">Toggle Dark Mode</button>
-        </header>
+        <div id="quote" class="quote">"Limits are Lies"</div>
 
-        <!-- Login Page -->
-        <div class="login">
-            <div class="quote">
-                <p>"Limits are Lies"</p>
-            </div>
-            <form id="login-form">
-                <input type="text" id="username" placeholder="Username" required>
-                <input type="password" id="password" placeholder="Password" required>
-                <button type="submit">Login</button>
-            </form>
+        <!-- Registration and Login Form -->
+        <div id="login-form">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username" required><br>
+            <input type="password" id="password" placeholder="Password" required><br>
+            <button onclick="loginUser()">Login</button>
+            <button onclick="showRegister()">Create Account</button>
         </div>
 
-        <!-- Main Content (After Login) -->
-        <div class="progress">
-            <h2>Track Your Lifts</h2>
-            <div class="lifts">
-                <form id="lift-form">
-                    <label for="bench">Bench Press</label>
-                    <input type="number" id="bench" placeholder="Weight" required>
-                    <input type="number" id="bench-reps" placeholder="Reps" required>
-                    <label for="squat">Squat</label>
-                    <input type="number" id="squat" placeholder="Weight" required>
-                    <input type="number" id="squat-reps" placeholder="Reps" required>
-                    <button type="submit">Save Progress</button>
-                </form>
-            </div>
-            <div id="progress-charts">
-                <!-- Charts will be generated here -->
-            </div>
+        <div id="register-form" style="display:none;">
+            <h2>Register</h2>
+            <input type="text" id="new-username" placeholder="Username" required><br>
+            <input type="password" id="new-password" placeholder="Password" required><br>
+            <button onclick="registerUser()">Register</button>
+            <button onclick="showLogin()">Back to Login</button>
         </div>
+
+        <!-- Dark Mode Toggle -->
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
     </div>
 
-    <footer>
-        <p>Powered by Nishhh</p>
-    </footer>
+    <!-- Homepage (after login) -->
+    <div id="home" style="display:none;">
+        <h2>Welcome, <span id="user-name"></span>!</h2>
+        <div>
+            <h3>Track Your Lifts</h3>
+            <select id="liftType">
+                <option value="bench">Bench Press</option>
+                <option value="squat">Squat</option>
+                <option value="deadlift">Deadlift</option>
+                <option value="shoulderPress">Shoulder Press</option>
+            </select><br>
+            <input type="number" id="sets" placeholder="Sets" required><br>
+            <input type="number" id="reps" placeholder="Reps" required><br>
+            <input type="number" id="weight" placeholder="Weight (kg)" required><br>
+            <input type="text" id="feeling" placeholder="How did you feel?" required><br>
+            <button onclick="saveLiftData()">Save Lift Data</button>
+        </div>
+
+        <div id="liftData"></div>
+
+        <button onclick="logoutUser()">Logout</button>
+    </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
