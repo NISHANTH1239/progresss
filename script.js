@@ -1,114 +1,78 @@
-let currentUser = null;
+// Toggle dark mode
+document.getElementById("darkToggle")?.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("dark", document.body.classList.contains("dark"));
+});
 
-function register() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-  if (!user || !pass) return showMessage("Fill all fields");
-  if (localStorage.getItem(`user_${user}`)) {
-    return showMessage("User already exists");
-  }
-  localStorage.setItem(`user_${user}`, pass);
-  showMessage("Registered! Please login.");
-}
-
-function login() {
-  const user = document.getElementById("username").value;
-  const pass = document.getElementById("password").value;
-  const stored = localStorage.getItem(`user_${user}`);
-  if (stored && stored === pass) {
-    currentUser = user;
-    document.getElementById("auth-section").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    loadEntries();
-  } else {
-    showMessage("Invalid login");
-  }
-}
-
-function logout() {
-  currentUser = null;
-  document.getElementById("auth-section").style.display = "block";
-  document.getElementById("app").style.display = "none";
-}
-
-function showMessage(msg) {
-  document.getElementById("auth-msg").innerText = msg;
-}
-
-function saveEntry() {
-  const liftType = document.getElementById("liftType").value;
+// Save lift data
+function saveLift() {
+  const lift = document.getElementById("liftType").value;
+  const weight = document.getElementById("weight").value;
   const sets = document.getElementById("sets").value;
   const reps = document.getElementById("reps").value;
-  const weight = document.getElementById("weight").value;
-  const feel = document.getElementById("feel").value;
+  const feeling = document.getElementById("feeling").value;
+  const date = new Date().toLocaleDateString();
 
-  const entry = {
-    liftType,
-    sets: parseInt(sets),
-    reps: parseInt(reps),
-    weight: parseFloat(weight),
-    feel,
-    date: new Date().toLocaleDateString()
-  };
-
-  const key = `entries_${currentUser}`;
-  let entries = JSON.parse(localStorage.getItem(key)) || [];
-  entries.push(entry);
-  localStorage.setItem(key, JSON.stringify(entries));
-  loadEntries();
+  const entry = { date, lift, weight, sets, reps, feeling };
+  let allData = JSON.parse(localStorage.getItem("liftData") || "[]");
+  allData.push(entry);
+  localStorage.setItem("liftData", JSON.stringify(allData));
+  showData();
 }
 
-function loadEntries() {
-  const key = `entries_${currentUser}`;
-  const entries = JSON.parse(localStorage.getItem(key)) || [];
-  const container = document.getElementById("entries");
-  container.innerHTML = "";
-
-  let chartData = {};
-
-  entries.forEach(entry => {
-    const div = document.createElement("div");
-    div.innerText = `${entry.date} - ${entry.liftType}: ${entry.sets} sets × ${entry.reps} reps @ ${entry.weight}kg (${entry.feel})`;
-    container.appendChild(div);
-
-    if (!chartData[entry.liftType]) {
-      chartData[entry.liftType] = { dates: [], weights: [] };
-    }
-    chartData[entry.liftType].dates.push(entry.date);
-    chartData[entry.liftType].weights.push(entry.weight);
+// Show data in table
+function showData() {
+  const data = JSON.parse(localStorage.getItem("liftData") || "[]");
+  const table = document.getElementById("liftTable");
+  table.innerHTML = `<tr><th>Date</th><th>Lift</th><th>Weight</th><th>Sets</th><th>Reps</th><th>Feeling</th></tr>`;
+  data.forEach(d => {
+    table.innerHTML += `<tr><td>${d.date}</td><td>${d.lift}</td><td>${d.weight}</td><td>${d.sets}</td><td>${d.reps}</td><td>${d.feeling}</td></tr>`;
   });
-
-  drawChart(chartData);
 }
 
-function drawChart(data) {
-  const ctx = document.getElementById("chart").getContext("2d");
-  if (window.chart) window.chart.destroy();
-
-  const datasets = Object.keys(data).map((lift, i) => ({
-    label: lift,
-    data: data[lift].weights,
-    borderColor: ["red", "green", "blue", "orange"][i],
-    tension: 0.3
-  }));
-
-  window.chart = new Chart(ctx, {
-    type: "line",
+// Render chart
+function renderChart() {
+  const data = JSON.parse(localStorage.getItem("liftData") || "[]");
+  const labels = data.map(d => d.date);
+  const weights = data.map(d => parseInt(d.weight));
+  new Chart(document.getElementById("progressChart"), {
+    type: 'line',
     data: {
-      labels: data[Object.keys(data)[0]]?.dates || [],
-      datasets: datasets
+      labels,
+      datasets: [{
+        label: 'Weight Lifted (kg)',
+        data: weights,
+        borderColor: 'orange',
+        fill: false,
+        tension: 0.1
+      }]
     },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: { display: true, text: "Weight (kg)" }
-        }
-      }
-    }
+    options: { responsive: true }
   });
 }
 
-function toggleDarkMode() {
-  document.body.classList.toggle("dark");
+if (location.pathname.includes("dashboard")) {
+  showData();
+  renderChart();
+}
+
+// Login system
+function login() {
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+  const users = JSON.parse(localStorage.getItem("users") || "{}");
+  if (users[u] && users[u] === p) {
+    window.location.href = "dashboard.html";
+  } else {
+    alert("Wrong credentials or user not registered.");
+  }
+}
+
+function toggleRegister() {
+  const u = prompt("Enter username to register");
+  const p = prompt("Enter password");
+  const users = JSON.parse(localStorage.getItem("users") || "{}");
+  users[u] = p;
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("Registered! Now you can log in.");
 }
