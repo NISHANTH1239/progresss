@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nishhh's Progress Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Nishhh's Progress</h1>
+    <button id="darkToggle">🌙</button>
+  </header>
+
+  <main>
+    <section class="input-section">
+      <h2>Log Your Lift</h2>
+      <select id="liftType">
+        <option value="Squat">Squat</option>
+        <option value="Bench Press">Bench Press</option>
+        <option value="Deadlift">Deadlift</option>
+        <option value="Shoulder Press">Shoulder Press</option>
+      </select>
+      <input type="number" id="weight" placeholder="Weight (kg)">
+      <input type="number" id="sets" placeholder="Sets">
+      <input type="number" id="reps" placeholder="Reps">
+      <input type="text" id="feeling" placeholder="How did you feel?">
+      <input type="file" id="videoUpload">
+      <button onclick="saveLift()">Save</button>
+    </section>
+
+    <section class="data-section">
+      <h2>Progress Table</h2>
+      <table id="liftTable">
+        <tr>
+          <th>Date</th><th>Lift</th><th>Weight</th><th>Sets</th><th>Reps</th><th>Feeling</th>
+        </tr>
+      </table>
+    </section>
+
+    <section class="chart-section">
+      <h2>Progress Chart</h2>
+      <canvas id="progressChart"></canvas>
+    </section>
+  </main>
+
+  <footer>
+    <p>Made by Nishanth ⚡</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
