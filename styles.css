@@ -1,71 +1,100 @@
 body {
-  margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  transition: background 0.3s, color 0.3s;
-}
-
-/* Dark Mode */
-body.dark {
-  background-color: #121212;
-  color: white;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  color: #222;
+  transition: background-color 0.4s, color 0.4s;
 }
 
 header {
-  display: flex;
-  justify-content: space-between;
+  background-color: #222;
+  color: #fff;
   padding: 1rem;
-  background: #222;
-  color: white;
-}
-
-input, select, button {
-  margin: 0.5rem;
-  padding: 0.5rem;
-}
-
-.login-container {
-  position: relative;
-  height: 100vh;
-  overflow: hidden;
-}
-.bg-img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
-}
-.overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: -1;
-}
-.login-box {
-  position: relative;
-  width: 90%;
-  max-width: 400px;
-  margin: auto;
-  top: 20%;
-  background: rgba(255,255,255,0.1);
-  padding: 2rem;
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
   text-align: center;
-  color: white;
 }
-.login-box .highlight {
-  color: orange;
+
+nav {
+  margin-top: 1rem;
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style-type: none;
+  padding: 0;
+}
+
+.nav-menu li a, #darkModeToggle {
+  color: #fff;
+  text-decoration: none;
+  background-color: #444;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+}
+
+main {
+  padding: 2rem;
+}
+
+section {
+  margin-bottom: 3rem;
+  background-color: #fff;
+  padding: 1rem 2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+form input, form select, form button {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: center;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #222;
+  color: #fff;
   font-style: italic;
-  text-shadow: 1px 1px 2px black;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .login-box {
-    top: 10%;
-  }
+/* Dark Mode */
+.dark-mode {
+  background-color: #121212;
+  color: #eee;
 }
 
-/* ... Add more styling as needed ... */
+.dark-mode header, .dark-mode footer {
+  background-color: #000;
+}
+
+.dark-mode .nav-menu li a, .dark-mode #darkModeToggle {
+  background-color: #333;
+}
+
+.dark-mode section {
+  background-color: #1f1f1f;
+  color: #eee;
+}
+
+.dark-mode table, .dark-mode th, .dark-mode td {
+  border: 1px solid #444;
+}
