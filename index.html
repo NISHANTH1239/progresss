@@ -1,86 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nishhh's Progress</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>Nishhh's Progress</h1>
+  <div class="login-container" id="login-screen">
+    <h1><span>Nishhh's</span> Progress</h1>
+    <p class="quote">"Limits are Lies"</p>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="register()">Register</button>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="main-app" class="hidden">
     <nav>
-      <ul>
-        <li onclick="showSection('dashboard')">Dashboard</li>
-        <li onclick="showSection('log')">Log Workout</li>
-        <li onclick="showSection('progress')">Progress</li>
-        <li onclick="showSection('charts')">Charts</li>
-        <li onclick="showSection('videos')">PR Videos</li>
-        <li onclick="showSection('settings')">Settings</li>
-      </ul>
+      <strong>Nishhh's Progress</strong>
+      <div>
+        <button onclick="switchTab('log')">Log Lift</button>
+        <button onclick="switchTab('table')">Progress Table</button>
+        <button onclick="switchTab('videos')">PR Videos</button>
+        <button onclick="toggleDarkMode()">🌓</button>
+      </div>
     </nav>
-  </header>
 
-  <main>
-    <section id="dashboard" class="active">
-      <h2>Welcome, Nishanth 💪</h2>
-      <p>Track your strength journey — one rep at a time!</p>
-    </section>
+    <div class="section" id="log">
+      <h2>Log Your Lifts</h2>
+      <select id="liftType">
+        <option value="Bench Press">Bench Press</option>
+        <option value="Squat">Squat</option>
+        <option value="Shoulder Press">Shoulder Press</option>
+        <option value="Deadlift">Deadlift</option>
+      </select>
+      <input type="number" id="sets" placeholder="Sets" />
+      <input type="number" id="reps" placeholder="Reps" />
+      <input type="number" id="weight" placeholder="Weight (kg)" />
+      <input type="text" id="feel" placeholder="How did you feel?" />
+      <button onclick="saveLift()">Save Lift</button>
+    </div>
 
-    <section id="log">
-      <h2>Log Your Workout</h2>
-      <form id="workoutForm">
-        <label>Lift:
-          <select id="lift">
-            <option>Bench Press</option>
-            <option>Squat</option>
-            <option>Deadlift</option>
-            <option>Shoulder Press</option>
-          </select>
-        </label>
-        <label>Sets: <input type="number" id="sets" required></label>
-        <label>Reps: <input type="number" id="reps" required></label>
-        <label>Weight (kg): <input type="number" id="weight" required></label>
-        <label>How did it feel? <input type="text" id="feel" required></label>
-        <button type="submit">Save</button>
-      </form>
-    </section>
-
-    <section id="progress">
+    <div class="section" id="table">
       <h2>Progress Table</h2>
-      <table id="progressTable">
-        <thead>
-          <tr>
-            <th>Date</th><th>Lift</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Feel</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
+      <table id="progressTable" border="1" cellpadding="5">
+        <tr>
+          <th>Lift</th><th>Sets</th><th>Reps</th><th>Weight</th><th>Feel</th><th>Date</th>
+        </tr>
       </table>
-    </section>
+    </div>
 
-    <section id="charts">
-      <h2>Lift Progress Chart</h2>
-      <canvas id="progressChart" width="400" height="200"></canvas>
-    </section>
-
-    <section id="videos">
-      <h2>Upload PR Videos</h2>
-      <input type="file" accept="video/*" id="videoInput">
-      <video id="videoPreview" controls width="320" height="240"></video>
-    </section>
-
-    <section id="settings">
-      <h2>Settings</h2>
-      <label>
-        <input type="checkbox" id="darkModeToggle"> Enable Dark Mode
-      </label>
-    </section>
-  </main>
+    <div class="section" id="videos">
+      <h2>Upload Your PR Videos</h2>
+      <input type="file" accept="video/*" />
+      <p>(This is just visual — uploading is not implemented yet.)</p>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
        
